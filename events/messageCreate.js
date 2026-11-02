@@ -1,7 +1,7 @@
 const { Events } = require("discord.js");
-const { read, write } = require("../core/db");
-const { log } = require("../core/log");
-const { getSettings } = require("../core/guildSettings");
+const { read, write } = require("../src/core/db");
+const { log } = require("../src/core/log");
+const { getSettings } = require("../src/core/guildSettings");
 const spam = new Map();
 module.exports = {
   name: Events.MessageCreate,
@@ -39,3 +39,4 @@ module.exports = {
     }
   }
 };
+

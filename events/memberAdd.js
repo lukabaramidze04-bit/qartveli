@@ -1,7 +1,7 @@
 const { Events, EmbedBuilder } = require("discord.js");
-const { identifyInvite, addInvite } = require("../features/invites");
-const { log } = require("../core/log");
-const { getSettings } = require("../core/guildSettings");
+const { identifyInvite, addInvite } = require("../src/features/invites");
+const { log } = require("../src/core/log");
+const { getSettings } = require("../src/core/guildSettings");
 module.exports = {
   name: Events.GuildMemberAdd,
   async execute(client, member) {
@@ -21,3 +21,4 @@ module.exports = {
     if (cfg.logsEnabled && cfg.logChannelId) await log(member.guild, cfg, "წევრი შემოვიდა", `${member.user.tag} (${member.id})`, 0x57F287);
   }
 };
+

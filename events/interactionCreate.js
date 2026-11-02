@@ -1,9 +1,9 @@
 const { Events, ChannelType, PermissionFlagsBits, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
-const { safeReply } = require("../core/safeReply");
-const { read, write } = require("../core/db");
-const { log } = require("../core/log");
-const { getSettings, updateSettings } = require("../core/guildSettings");
-const setupUI = require("../commands/setup");
+const { safeReply } = require("../src/core/safeReply");
+const { read, write } = require("../src/core/db");
+const { log } = require("../src/core/log");
+const { getSettings, updateSettings } = require("../src/core/guildSettings");
+const setupUI = require("../src/commands/setup");
 
 module.exports = {
   name: Events.InteractionCreate,
@@ -88,3 +88,4 @@ module.exports = {
     }
   }
 };
+

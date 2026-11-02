@@ -2,7 +2,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 async function loadEvents(client) {
-  const dir = path.join(__dirname, "..", "..", "event");
+  const dir = path.join(__dirname, "events");
 
   if (!fs.existsSync(dir)) {
     console.error(`[ERROR] Events folder not found: ${dir}`);
@@ -36,3 +36,4 @@ async function loadEvents(client) {
 }
 
 module.exports = { loadEvents };
+
