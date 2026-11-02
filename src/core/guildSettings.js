@@ -4,7 +4,8 @@ const DEFAULTS = {
   ticketCategoryId: null, staffRoleId: null, suggestionChannelId: null,
   reportChannelId: null, announcementChannelId: null, ranksChannelId: null,
   autoRoleId: null, antiSpam: false, antiMention: false, welcomeEnabled: false,
-  ticketsEnabled: false, logsEnabled: false
+  ticketsEnabled: false, logsEnabled: false, blockLinks: false,
+  tempVoiceLobbyId: null, tempVoiceCategoryId: null
 };
 function getSettings(guildId) {
   const all = read('guild-settings', {});

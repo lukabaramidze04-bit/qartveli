@@ -4,6 +4,7 @@ const { read, write } = require("../src/core/db");
 const { log } = require("../src/core/log");
 const { getSettings, updateSettings } = require("../src/core/guildSettings");
 const setupUI = require("../src/commands/setup");
+const { handleAIButton } = require("../src/core/ai");
 
 module.exports = {
   name: Events.InteractionCreate,
@@ -13,6 +14,10 @@ module.exports = {
       if (!command) return;
       try { await command.execute(i, client); }
       catch (e) { console.error(`[COMMAND ${i.commandName}]`, e); await safeReply(i, { content: "შეცდომა მოხდა. შეამოწმე ბოტის უფლებები და კონსოლი." }); }
+      return;
+    }
+    if (i.isButton() && i.customId?.startsWith("ai:")) {
+      await handleAIButton(client, i);
       return;
     }
     // QARTVELI private setup dashboard: each server has its own saved settings.
@@ -69,6 +74,7 @@ module.exports = {
           if (guildCfg.staffRoleId) perms.push({ id: guildCfg.staffRoleId, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory] });
           const ch = await i.guild.channels.create({ name: `ticket-${i.user.id}`, type: ChannelType.GuildText, parent: guildCfg.ticketCategoryId || undefined, permissionOverwrites: perms });
           await ch.send({ content: `${i.user} დახმარება გჭირდება? ${guildCfg.staffRoleId ? `<@&${guildCfg.staffRoleId}>` : ""}`, embeds: [new EmbedBuilder().setTitle("Support Ticket").setDescription("აღწერე შენი პრობლემა. Staff-ს შეუძლია Claim ღილაკით ტიკეტის აღება.").setColor(0x5865F2)], components: [new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId("ticket_claim").setLabel("Claim").setStyle(ButtonStyle.Success), new ButtonBuilder().setCustomId("ticket_close").setLabel("Close").setStyle(ButtonStyle.Danger))] });
+          await log(i.guild, guildCfg, "🎫 ტიკეტი გაიხსნა", `${i.user.tag} (${i.user.id}) → ${ch}`);
           return safeReply(i, { content: `ტიკეტი შეიქმნა: ${ch}` });
         } catch (e) { console.error("[TICKET OPEN]", e); return safeReply(i, { content: "ტიკეტის შექმნა ვერ მოხერხდა. შეამოწმე Manage Channels და კატეგორიის ID." }); }
       }
@@ -77,15 +83,16 @@ module.exports = {
         if (staffRoleId && !i.member.roles.cache.has(staffRoleId) && !i.member.permissions.has(PermissionFlagsBits.ManageChannels)) return safeReply(i, { content: "Claim-ისთვის Staff როლი გჭირდება." });
         await i.channel.setTopic(`Claimed by ${i.user.tag}`).catch(() => {});
         await i.channel.send(`🛠️ ტიკეტი აიღო ${i.user}.`);
+        await log(i.guild, getSettings(i.guildId), "🛠️ ტიკეტი აიღეს", `${i.channel}\nStaff: ${i.user.tag}`);
         return safeReply(i, { content: "ტიკეტი შენ აიღე." });
       }
       if (i.customId === "ticket_close") {
         const staffRoleId = getSettings(i.guildId).staffRoleId;
         if (staffRoleId && !i.member.roles.cache.has(staffRoleId) && !i.member.permissions.has(PermissionFlagsBits.ManageChannels)) return safeReply(i, { content: "ტიკეტის დახურვა Staff-ს შეუძლია." });
+        await log(i.guild, getSettings(i.guildId), "🔒 ტიკეტი დაიხურა", `${i.channel}\nდახურა: ${i.user.tag}`);
         await safeReply(i, { content: "ტიკეტი 5 წამში დაიხურება." });
         setTimeout(() => i.channel.delete("Ticket closed").catch(() => {}), 5000);
       }
     }
   }
 };
-

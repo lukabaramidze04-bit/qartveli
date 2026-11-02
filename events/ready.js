@@ -6,4 +6,3 @@ module.exports = {
     for (const guild of client.guilds.cache.values()) await cacheGuildInvites(guild);
   }
 };
-

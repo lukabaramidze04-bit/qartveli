@@ -2,7 +2,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 async function loadEvents(client) {
-  const dir = path.join(__dirname, "..", "..", "event");
+  const dir = path.join(__dirname, "..", "..", "events");
 
   console.log("[EVENT PATH]", dir);
 

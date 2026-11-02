@@ -21,4 +21,3 @@ module.exports = {
     if (cfg.logsEnabled && cfg.logChannelId) await log(member.guild, cfg, "წევრი შემოვიდა", `${member.user.tag} (${member.id})`, 0x57F287);
   }
 };
-

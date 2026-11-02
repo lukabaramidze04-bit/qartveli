@@ -1,2 +1,0 @@
-const { SlashCommandBuilder, ChannelType, PermissionFlagsBits } = require("discord.js");
-module.exports = { data: new SlashCommandBuilder().setName("voice-setup").setDescription("აჩვენებს დროებითი Voice ოთახის დასაყენებელ ინსტრუქციას").setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild), async execute(i){ return i.reply({content:"შექმენი Voice Lobby არხი, ჩასვი მისი ID `src/config.js`-ში TEMP_VOICE_LOBBY_ID-ში და გადატვირთე ბოტი. (ავტომატური ოთახის შექმნა შემდეგ ეტაპზე დაემატება.)",ephemeral:true}); } };

@@ -33,12 +33,19 @@ Never share `.env` or your bot token. If a token leaks, reset it in Discord Deve
 - Server/user information, avatar, AFK
 - Anti-spam, anti-mass-mention and anti-link basic protections
 - Event logging
+- Optional `/ai` assistant: can use the bot's registered slash-command features. Server-changing commands require a separate confirmation button from the person who requested them, and command permission requirements still apply.
 
 ## Configure optional features
-Set the corresponding IDs in `.env`. Create the rank roles manually and put their IDs in `src/config.js` (RANK_ROLE_IDS). For temporary voice rooms, create a voice lobby and set its ID as `tempVoiceLobbyId` in `src/config.js`.
+Set the corresponding IDs in `.env` where listed. Create the rank roles manually and put their IDs in `src/config.js` (`rankRoleIds`). For temporary voice rooms, create a voice lobby and use `/ai` to set `tempVoiceLobbyId` to its channel mention; you can also set a category. These settings are stored per server. Existing `src/config.js` lobby IDs remain as fallbacks.
 
 ## Important
 This is a modular starter bot, not a hosted service. It must be running on a computer or hosting provider to stay online. Test permissions and role hierarchy in a private test server first.
+
+## AI assistant (optional)
+
+`/ai` uses Groq's chat-completions API and the `openai/gpt-oss-20b` model by default. It can call every currently registered slash command, plus ticket open/claim/close, rank selection, and `/setup` settings actions including anti-link protection and temporary voice setup. Add `GROQ_API_KEY` as a private variable in the host dashboard; do not put the real key in GitHub, `.env.example`, or Discord chat. `GROQ_MODEL` can select another Groq model that supports tool calling.
+
+Only the text explicitly entered in `/ai`, plus generic command descriptions and system instructions, is sent to Groq. The bot does not read or forward ordinary server messages or server data to the AI. Do not include passwords, bot tokens, or private information in an AI prompt. Commands that change server settings, moderate members, publish messages, or create public items require an approval click in Discord. The requester must also have the slash command's required Discord permission. AI requests are rate-limited to one per user every 8 seconds; the API key is optional, so the bot's non-AI commands keep working without it.
 
 ## QARTVELI Dashboard (/setup)
 
